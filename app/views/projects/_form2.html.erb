@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-body" style="border: 1px solid lightseagreen">
+    <h5 class="card-title"><%= title %></h5>
+    <%= form_with(model: project) do |f| %>
+      <% if project.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+          <ul>
+            <% project.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="row">
+        <div class="col">
+          <%= f.label 'Nome' %>
+          <%= f.text_field :name, class: 'form-control' %>
+        </div>
+        <div class="col">
+          <%= f.label 'Descrição' %>
+          <%= f.text_field :description, class: 'form-control' %>
+        </div>
+      </div>
+
+      <hr style="border: 1px solid lightseagreen">
+
+      <h3>Tarefas</h3>
+      <br>
+
+      <div class="tasks">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Feito</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody class="tasks">
+            <%= f.fields_for :tasks do |task| %>
+              <%= render 'task_fields', :f => task %>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div class="links">
+          <%= link_to_add_association 'Adicionar', f, :tasks, class: 'btn btn-primary',
+                                      data: { association_insertion_node: '.tasks',
+                                              association_insertion_method: :append } %>
+        </div>
+      </div>
+
+      <div class="actions">
+        <%= link_to 'Voltar', projects_path, class: 'btn btn-outline-secondary' %>
+
+        <% if action_name.to_sym == :new || action_name.to_sym == :create %>
+          <%= f.submit 'Salvar', class: 'btn btn-success' %>
+        <% else %>
+          <%= f.submit 'Atualizar', class: 'btn btn-success' %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
